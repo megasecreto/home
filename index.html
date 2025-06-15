@@ -1,36 +1,188 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Megasecreto</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: #000;
+      color: #fff;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      padding: 2rem;
+      text-align: center;
     }
 
-    img {
-      max-width: 100%;
-      max-height: 100vh;
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #ccc;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      width: 160px;
       height: auto;
-      object-fit: contain;
+      margin-bottom: 2rem;
+      opacity: 0.8;
     }
 
-    @media (orientation: portrait) {
-      img {
-        width: auto;
-        height: 100vh;
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 400px;
+      background-color: #111;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    label {
+      font-size: 0.95rem;
+      color: #aaa;
+      margin-bottom: -0.5rem;
+    }
+
+    input, select, button {
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    input, select {
+      background-color: #222;
+      color: #fff;
+    }
+
+    input::placeholder {
+      color: #aaa;
+    }
+
+    button {
+      background-color: #e91e63;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #c2185b;
+    }
+
+    #portfolio.hidden {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 4rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+      }
+
+      .logo {
+        width: 180px;
       }
     }
   </style>
 </head>
 <body>
-  <img src="megasecreto.png" alt="Megasecreto">
+
+  <h1>No podemos revelar el nombre.</h1>
+  <p>Pero en 2026, las mejores historias visuales empezarán aquí.<br>¿Quieres estar entre los primeros?</p>
+
+  <img src="https://megasecreto.github.io/home/megasecreto.png" alt="Megasecreto" class="logo" />
+
+  <form
+    action="https://formspree.io/f/xovwwlle" 
+    method="POST"
+    onsubmit="redirectAfterSubmit(event)"
+  >
+    <input type="email" name="email" placeholder="Tu correo electrónico" required />
+
+    <label for="specialty">Si eres un creador, nos interesa conocerte.</label>
+    <select name="specialty" id="specialty" required>
+      <option value="" disabled selected>¿A qué te dedicas?</option>
+      <option value="futurofan">Futuro Fan</option>
+      <option value="escritura">Escritura</option>
+      <option value="dibujo">Dibujo</option>
+      <option value="color">Color</option>
+      <option value="storyboard">Storyboard</option>
+      <option value="animación">Animación</option>
+      <option value="letra">Letra</option>
+      <option value="otro">Otro</option>
+    </select>
+
+    <input
+      type="url"
+      name="portfolio"
+      id="portfolio"
+      placeholder="Enlace a tu portfolio (opcional)"
+    />
+
+    <button type="submit">Enviar</button>
+  </form>
+
+ <script>
+  const specialtySelect = document.getElementById("specialty");
+  const portfolioField = document.getElementById("portfolio");
+
+  specialtySelect.addEventListener("change", () => {
+    if (specialtySelect.value === "futurofan") {
+      portfolioField.classList.add("hidden");
+    } else {
+      portfolioField.classList.remove("hidden");
+    }
+  });
+
+  function redirectAfterSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const specialty = document.getElementById("specialty").value;
+
+    fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(response => {
+      if (response.ok) {
+        if (specialty === "futurofan") {
+          window.location.href = "thank-you-fan.html";
+        } else {
+          window.location.href = "thank-you-creador.html";
+        }
+      } else {
+        alert("Hubo un error. Intenta más tarde.");
+      }
+    }).catch(() => {
+      alert("Error en la conexión. Intenta más tarde.");
+    });
+  }
+</script>
+
+
 </body>
 </html>
